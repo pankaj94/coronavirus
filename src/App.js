@@ -11,6 +11,8 @@ const options = {
   pointSize : 4,
   colors : ['#d28e3e','blue']
 };
+
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -21,12 +23,20 @@ class App extends React.Component {
       items: [],
       countryData : [],
       filterData : [],
-      chartData : []
+      chartData : [],
+      isMobile : false
     };
+    
   }
 
   
   componentDidMount() {
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      this.setState({
+        isMobile : true
+      })
+    }
     this.getAllData();
     this.getCountryData('india');
     
@@ -100,7 +110,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, items ,countryData,filterData, chartData,isChartLoader} = this.state;
+    const { error, isLoaded, items ,countryData,filterData, chartData,isChartLoader,isMobile} = this.state;
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -132,7 +142,7 @@ class App extends React.Component {
               <div>Total Active : <strong>{countryData.active}</strong></div>
               <div>Total critical : <strong>{countryData.critical}</strong></div>
               <div>Cases Per Million : <strong>{countryData.casesPerOneMillion}</strong></div>
-              <section>
+              {!isMobile && <section>
               {isChartLoader ? 'Loading...........' :<Chart
                   chartType="LineChart"
                   width="100%"
@@ -140,9 +150,18 @@ class App extends React.Component {
                   data={chartData}
                   options={options}
                 />}
-              </section>
+              </section>}
           </div>
         </div>
+        {isMobile && <section>
+              {isChartLoader ? 'Loading...........' :<Chart
+                  chartType="LineChart"
+                  width="100%"
+                  height="400px"
+                  data={chartData}
+                  options={options}
+                />}
+              </section>}
         </div>
       );
     }

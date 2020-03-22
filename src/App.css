@@ -71,6 +71,7 @@ input{
     text-align: center;
     margin-top: 10px;
     padding: 5px;
+    border: 1px solid #d28e3e;
 }
 .side-nav ul {
   height: 100vh;
@@ -102,4 +103,23 @@ ul li {
   color: #d28e3e;
   font-weight: 600;
   margin-right: 10px;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .side-nav {
+    width: 45%
+  }
+  .center-nav{
+    width: 55%;
+  }
+  .center-nav > div {
+    width: 85%;
+    border: 1px solid white;
+    display: inline-block;
+    margin: 20px;
+    box-shadow: 0px 1px 2px 1px #d28e3e;
+    box-sizing: border-box;
+    padding: 13px;
+}
 }
