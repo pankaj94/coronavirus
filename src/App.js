@@ -24,7 +24,8 @@ class App extends React.Component {
       countryData : [],
       filterData : [],
       chartData : [],
-      isMobile : false
+      isMobile : false,
+      defaultCountry : 'India'
     };
     
   }
@@ -38,7 +39,7 @@ class App extends React.Component {
       })
     }
     this.getAllData();
-    this.getCountryData('india');
+    this.getCountryData('India');
     
   }
 
@@ -55,9 +56,16 @@ class App extends React.Component {
   }
 
   getCountryData = (countryName) =>{
+    
+    this.setState({
+      isLoaded : false,
+      defaultCountry : countryName
+    })
     getAPIdata(urlMaps.allStats +countryName).then(res => {
       this.setState({
-        countryData : res
+        countryData : res,
+        isLoaded :true,
+        
       },() =>{
         this.getHistoricalCountryData(countryName);
       })
@@ -110,7 +118,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { error, isLoaded, items ,countryData,filterData, chartData,isChartLoader,isMobile} = this.state;
+    const { error, isLoaded, items ,countryData,filterData, chartData,isChartLoader,isMobile,defaultCountry} = this.state;
+    console.log('defi',defaultCountry);
     if (error) {
       return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -118,19 +127,23 @@ class App extends React.Component {
     } else {
       return (
         <div>
-          <div className="heading">Coronavirus Outbreak Information</div>
-        
-        <div className="parent-node">
+          <div className="heading"><a href="/">Coronavirus Outbreak Information</a></div>
           <div className="side-nav">
-            <input type="text" placeholder="Search Country" onChange={this.searchCountry} />
-              <ul className="">
+            <select id="browsers" value={defaultCountry} onChange={(e)=>{this.getCountryData(e.target.value)}}>
+              {filterData.map(item => (
+                <option key={item.country+item.cases} value={item.country} >{item.country} - {item.cases}</option>
+              ))}
+            </select>
+             
+              {/* <ul className="">
               {filterData.map(item => (
                 <li key={item.country} onClick={() => this.getCountryData(item.country)}>
                   <span className="text-red">{item.cases}</span>{item.country} 
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </div>
+        <div className="parent-node">
           <div className="center-nav">
             <h1>Based on Country you selected</h1>
               <div>Country Name : <strong>{countryData.country}</strong></div>
